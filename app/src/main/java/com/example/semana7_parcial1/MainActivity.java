@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import model.GenesisParticulas;
+
 public class MainActivity extends AppCompatActivity {
 
     private EditText nombreGrupo, numeroParticulas, posXText, posYText;
@@ -27,11 +31,15 @@ public class MainActivity extends AppCompatActivity {
     private int r, g, b;
     private boolean azulPresionado, verdePresionado, rojoPresionado, crearPresionado, borrarPresionado;
 
-    //Gson gson = new Gson();
+    Gson gson;
     private String json;
 
-    BufferedReader reader;
-    BufferedWriter writer;
+    BufferedReader bfr;
+    BufferedWriter bfw;
+
+    GenesisParticulas partculasNacen;
+
+
 
 
     @Override
@@ -43,27 +51,25 @@ public class MainActivity extends AppCompatActivity {
         numeroParticulas=findViewById(R.id.numeroParticulas_editText);
         posXText=findViewById(R.id.posX_editText);
         posYText=findViewById(R.id.posY_editText);
-
         //COLORES
         azulBtn=findViewById(R.id.colorAzul_boton);
         verdeBtn=findViewById(R.id.colorVerde_boton);
         rojoBtn=findViewById(R.id.colorRojo_boton);
-
         //CREAR BORRAR PARTICULAS
         crearBtn=findViewById(R.id.crearParticulas_boton);
         borrarBtn=findViewById(R.id.borrarParticulas_boton);
-
         //BOOLEANS BOTONES
         azulPresionado=true;
         verdePresionado=true;
         rojoPresionado=true;
+
+        iniciarCliente();
 
         //BOTONES COLORES
         azulBtn.setOnClickListener(
                 (v)->{
                     azulPresionado = true;
                     colorCrearParticulas();
-
                 }
         );
 
@@ -81,18 +87,18 @@ public class MainActivity extends AppCompatActivity {
 
                 }
         );
-
         /*azulBtn.setOnClickListener(this);
         verdeBtn.setOnClickListener(this);
         rojoBtn.setOnClickListener(this);*/
 
-
         //BOTONES CREAR Y BORRAR PARTICULAS
         crearBtn.setOnClickListener(
                 (v)->{
-                    Gson gson = new Gson();
-
                     crearPresionado = true;
+
+                    // Gson gson;
+                    gson = new Gson();
+
                     colorCrearParticulas();
                     grupo = nombreGrupo.getText().toString();
                     cantidad = numeroParticulas.getText().toString();
@@ -100,11 +106,18 @@ public class MainActivity extends AppCompatActivity {
                     posX = posXText.getText().toString();
                     posY = posYText.getText().toString();
 
-                    if (grupo.isEmpty() || grupo.equals(null) || posX.isEmpty() || posX.equals(null) || posY.isEmpty() || posY.equals(null)
-                    || cantidad.isEmpty() || cantidad.equals(null)) {
-                        Toast.makeText(this, "Llena los campos vacios corazón", Toast.LENGTH_LONG).show();
+                    if (grupo.isEmpty() || cantidad.isEmpty() || posX.isEmpty() || posY.isEmpty() ) {
+                        Toast.makeText(this, "Llena los campos vacios corazón", Toast.LENGTH_SHORT).show();
                         crearPresionado = false;
                     }
+
+                    //GenesisParticulas partculasNacen;
+                    partculasNacen = new GenesisParticulas(grupo,cantidad, posX,posY, r, g, b);
+
+                    //private String json;
+                    json = gson.toJson(partculasNacen);
+
+                    enviarParticulas(json);
 
                 }
         );
@@ -116,7 +129,25 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    private void colorCrearParticulas() {
+    private void enviarParticulas(String mensajito) {
+        new Thread(
+                () -> {
+                    try {
+                        bfw.write(mensajito + "\n");
+                        bfw.flush();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+
+                    }
+
+                }
+
+        ).start();
+
+    }
+
+     private void colorCrearParticulas() {
 
         if (azulPresionado){
             r = 13;
@@ -135,8 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-    public void initClient()
-    {
+    public void iniciarCliente() {
         new Thread(
                 () ->{
                     try {
@@ -146,18 +176,17 @@ public class MainActivity extends AppCompatActivity {
 
                         InputStream is = socket.getInputStream();
                         InputStreamReader isr = new InputStreamReader(is);
-                        reader = new BufferedReader(isr);
+                        bfr = new BufferedReader(isr);
 
                         OutputStream os = socket.getOutputStream();
                         OutputStreamWriter osw = new OutputStreamWriter(os);
-                        writer = new BufferedWriter(osw);
+                        bfw = new BufferedWriter(osw);
 
                         while(true)
                         {
                             System.out.println("Awaiting message...");
-                            String line = reader.readLine();
+                            String line = bfr.readLine();
                             System.out.println("Received message: " + line);
-
 
                         }
                     } catch (UnknownHostException e) {
@@ -170,27 +199,4 @@ public class MainActivity extends AppCompatActivity {
                 }
         ).start();
     }
-
-   /* @Override
-    public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.colorAzul_boton:
-                azulPresionado = true;
-                colorCrearParticulas();
-                //String colorAzulCodigo = "#0DA7FA";
-                break;
-
-            case R.id.colorVerde_boton:
-                verdePresionado = true;
-                colorCrearParticulas();
-                //String colorVerdeCodigo = "##A5FB41";
-                break;
-
-            case R.id.colorRojo_boton:
-                rojoPresionado = true;
-                colorCrearParticulas();
-                //String colorRojoCodigo = "#E91E63";
-                break;
-        }
-    }*/
 }
