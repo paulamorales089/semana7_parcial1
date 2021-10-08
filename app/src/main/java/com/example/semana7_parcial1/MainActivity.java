@@ -67,13 +67,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         iniciarCliente();
+        colorCrearParticulas();
+
 
 
         //BOTONES COLORES
         azulBtn.setOnClickListener(
                 (v)->{
                     azulPresionado = true;
-                    colorCrearParticulas();
+                  colorCrearParticulas();
                 }
         );
 
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         rojoBtn.setOnClickListener(
                 (v)->{
                     rojoPresionado = true;
-                    colorCrearParticulas();
+                  colorCrearParticulas();
 
                 }
         );
@@ -132,16 +134,26 @@ public class MainActivity extends AppCompatActivity {
      private void colorCrearParticulas() {
 
         if (azulPresionado){
+            rojoPresionado=false;
+            verdePresionado=false;
             r = 13;
             g = 167;
             b = 250;
 
-        } else if (verdePresionado){
+        }
+        if (verdePresionado){
+            azulPresionado=false;
+            rojoPresionado=false;
+
             r = 165;
             g = 251;
             b = 65;
 
-        } else if (rojoPresionado){
+        }
+        if (rojoPresionado){
+            verdePresionado=false;
+            azulPresionado=false;
+
             r = 233;
             g = 30;
             b = 99;
@@ -153,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                 () ->{
                     try {
                         System.out.println("Connecting to server...");
-                        Socket socket = new Socket("192.168.1.58", 4000);
+                        Socket socket = new Socket("192.168.1.3", 4000);
                         System.out.println("Established connection to server");
 
                         InputStream is = socket.getInputStream();
