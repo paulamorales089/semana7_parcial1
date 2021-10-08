@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText nombreGrupo, numeroParticulas, posXText, posYText;
     private Button azulBtn, verdeBtn, rojoBtn, crearBtn, borrarBtn;
 
-    private String posX, posY, grupo, cantidad;
-    private int r, g, b;
+    private String  grupo;
+    private int r, g, b, posX, posY, cantidad;
     private boolean azulPresionado, verdePresionado, rojoPresionado, crearPresionado, borrarPresionado;
 
     Gson gson;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     BufferedReader bfr;
     BufferedWriter bfw;
 
-    GenesisParticulas partculasNacen;
+    GenesisParticulas genesisParticulas;
 
 
 
@@ -58,12 +58,16 @@ public class MainActivity extends AppCompatActivity {
         //CREAR BORRAR PARTICULAS
         crearBtn=findViewById(R.id.crearParticulas_boton);
         borrarBtn=findViewById(R.id.borrarParticulas_boton);
+
+
         //BOOLEANS BOTONES
         azulPresionado=true;
         verdePresionado=true;
         rojoPresionado=true;
 
+
         iniciarCliente();
+
 
         //BOTONES COLORES
         azulBtn.setOnClickListener(
@@ -87,11 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
         );
-        /*azulBtn.setOnClickListener(this);
-        verdeBtn.setOnClickListener(this);
-        rojoBtn.setOnClickListener(this);*/
-
-        //BOTONES CREAR Y BORRAR PARTICULAS
+       //BOTONES CREAR Y BORRAR PARTICULAS ENVIO DE DATOS
         crearBtn.setOnClickListener(
                 (v)->{
                     crearPresionado = true;
@@ -101,21 +101,21 @@ public class MainActivity extends AppCompatActivity {
 
                     colorCrearParticulas();
                     grupo = nombreGrupo.getText().toString();
-                    cantidad = numeroParticulas.getText().toString();
+                    cantidad = Integer.parseInt(numeroParticulas.getText().toString());
 
-                    posX = posXText.getText().toString();
-                    posY = posYText.getText().toString();
+                    posX = Integer.parseInt(posXText.getText().toString());
+                    posY = Integer.parseInt(posYText.getText().toString());
 
-                    if (grupo.isEmpty() || cantidad.isEmpty() || posX.isEmpty() || posY.isEmpty() ) {
+                    /*if (grupo.isEmpty() || cantidad.isEmpty() || posX.isEmpty() || posY.isEmpty() ) {
                         Toast.makeText(this, "Llena los campos vacios corazón", Toast.LENGTH_SHORT).show();
                         crearPresionado = false;
-                    }
+                    }*/
 
-                    //GenesisParticulas partculasNacen;
-                    partculasNacen = new GenesisParticulas(grupo,cantidad, posX,posY, r, g, b);
+                    //GenesisParticulas particulasNacen;
+                    genesisParticulas = new GenesisParticulas(grupo,cantidad, posX, posY, r, g, b);
 
                     //private String json;
-                    json = gson.toJson(partculasNacen);
+                    json = gson.toJson(genesisParticulas);
 
                     enviarParticulas(json);
 
@@ -127,24 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
                 }
         );
-    }
-
-    private void enviarParticulas(String mensajito) {
-        new Thread(
-                () -> {
-                    try {
-                        bfw.write(mensajito + "\n");
-                        bfw.flush();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-
-                    }
-
-                }
-
-        ).start();
-
     }
 
      private void colorCrearParticulas() {
@@ -194,6 +176,20 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }catch (IOException e) {
                         // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+        ).start();
+    }
+
+    private void enviarParticulas(String mensajito) {
+        new Thread(
+                () -> {
+                    try {
+                        bfw.write(mensajito + "\n");
+                        bfw.flush();
+
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }

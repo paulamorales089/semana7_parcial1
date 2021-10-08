@@ -1,9 +1,10 @@
 package model;
 
+
 public class GenesisParticulas {
 
     private String grupo;
-    private String cantidad;
+    private int cantidad;
 
     private int posXE, posYE;
 
@@ -12,7 +13,7 @@ public class GenesisParticulas {
     private int movimiento;
 
 
-    public GenesisParticulas (String grupo,String cantidad,  int posXE, int posYE, int r, int g, int b) {
+    public GenesisParticulas (String grupo, int cantidad,  int posXE, int posYE, int r, int g, int b) {
 
         this.grupo = grupo;
         this.cantidad = cantidad;
@@ -29,43 +30,85 @@ public class GenesisParticulas {
 
     }
 
+    public void arribaParticula()
+    {
+        posYE -= 3;
+    }
 
-    public String getNombreGrupo() {
+    public void abajoParticula()
+    {
+        posYE += 3;
+    }
+
+    public void derechaParticula()
+    {
+        posXE += 3;
+    }
+
+    public void izquierdaParticula()
+    {
+        posXE -= 3;
+    }
+
+
+    public void detectorBorde()
+    {
+        if(posXE >= 600)
+        {
+            posXE = 599;
+        }
+        if(posXE <= 0)
+        {
+            posXE = 1;
+        }
+        if(posYE >= 600)
+        {
+            posYE = 599;
+        }
+        if(posYE < 0)
+        {
+            posYE = 1;
+        }
+    }
+
+
+
+    public String getGrupo() {
         return grupo;
     }
 
 
-    public void setNombreGrupo(String nombreGrupo) {
-        this.grupo = nombreGrupo;
+    public void setGrupo(String grupo) {
+        this.grupo = grupo;
     }
 
 
-    public String getCantidadParticulas() {
+    public int getCantidad() {
         return cantidad;
     }
 
 
-    public void setCantidadParticulas(String cantidadParticulas) {
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
 
 
-    public int getPosX() {
+    public int getPosXE() {
         return posXE;
     }
 
 
-    public void setPosX(int posX) {
+    public void setPosXE(int posXE) {
         this.posXE = posXE;
     }
 
 
-    public int getPosY() {
+    public int getPosYE() {
         return posYE;
     }
 
 
-    public void setPosY(int posY) {
+    public void setPosYE(int posYE) {
         this.posYE = posYE;
     }
 
@@ -108,5 +151,8 @@ public class GenesisParticulas {
     public void setMovimiento(int movimiento) {
         this.movimiento = movimiento;
     }
+
+
 }
+
 
