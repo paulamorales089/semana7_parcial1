@@ -132,12 +132,14 @@ public class MainActivity extends AppCompatActivity {
 
         borrarBtn.setOnClickListener(
                 (v)->{
+                    matarParticulas(json);
 
                 }
         );
     }
 
-     private void colorCrearParticulas() {
+
+    private void colorCrearParticulas() {
 
         if (azulPresionado ){
 
@@ -210,4 +212,21 @@ public class MainActivity extends AppCompatActivity {
                 }
         ).start();
     }
+
+    private void matarParticulas(String noMensajito) {
+        new Thread(
+                () -> {
+                    try {
+                        bfw.write(noMensajito + "\n");
+                        bfw.flush();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        ).start();
+    }
+
+
+
 }
