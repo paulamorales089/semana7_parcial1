@@ -67,28 +67,34 @@ public class MainActivity extends AppCompatActivity {
 
 
         iniciarCliente();
-        colorCrearParticulas();
+        //colorCrearParticulas();
 
 
 
         //BOTONES COLORES
         azulBtn.setOnClickListener(
                 (v)->{
-                    azulPresionado = true;
+                    azulPresionado=true;
+                    verdePresionado = false;
+                    rojoPresionado = false;
                   colorCrearParticulas();
                 }
         );
 
         verdeBtn.setOnClickListener(
                 (v)->{
-                    verdePresionado = true;
+                    verdePresionado=true;
+                    rojoPresionado = false;
+                    azulPresionado = false;
                     colorCrearParticulas();
 
                 }
         );
         rojoBtn.setOnClickListener(
                 (v)->{
-                    rojoPresionado = true;
+                    rojoPresionado=true;
+                    verdePresionado = false;
+                    azulPresionado = false;
                   colorCrearParticulas();
 
                 }
@@ -133,17 +139,15 @@ public class MainActivity extends AppCompatActivity {
 
      private void colorCrearParticulas() {
 
-        if (azulPresionado){
-            rojoPresionado=false;
-            verdePresionado=false;
+        if (azulPresionado ){
+
             r = 13;
             g = 167;
             b = 250;
 
         }
         if (verdePresionado){
-            azulPresionado=false;
-            rojoPresionado=false;
+
 
             r = 165;
             g = 251;
@@ -151,8 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if (rojoPresionado){
-            verdePresionado=false;
-            azulPresionado=false;
+
 
             r = 233;
             g = 30;
