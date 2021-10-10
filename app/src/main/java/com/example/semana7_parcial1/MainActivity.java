@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         azulPresionado=true;
         verdePresionado=true;
         rojoPresionado=true;
+        borrarPresionado=false;
 
 
         iniciarCliente();
@@ -132,8 +133,9 @@ public class MainActivity extends AppCompatActivity {
 
         borrarBtn.setOnClickListener(
                 (v)->{
-                    matarParticulas(json);
 
+                    borrarPresionado=true;
+                    matarParticulas(json);
                 }
         );
     }
